@@ -2,8 +2,9 @@ from flask import Flask, render_template, flash
 from flask_migrate import Migrate
 from flask_login import LoginManager, login_required
 from app.auth.routes import auth
+from app.game.routes import game
 from app.config import Config
-from app.models import db
+from app.models import db, User
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -26,3 +27,4 @@ def load_user(id):
     return User.query.get(int(id))
 
 app.register_blueprint(auth, url_prefix='/auth')
+app.register_blueprint(game, url_prefix='/game')
