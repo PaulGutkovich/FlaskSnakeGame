@@ -5,6 +5,10 @@ const ctx = canvas.getContext("2d");
 document.addEventListener("keydown", keyPressed);
 setInterval(game, 1000/15);
 
+const form = document.getElementById("submit_form");
+
+var score = 0;
+
 var vx = 20;
 var vy = 0;
 
@@ -17,12 +21,13 @@ var food_y = 0;
 var snake = [{x:320, y:200}];
 
 var died = false;
+var just_died = false;
 
 function game() {
     if (died) {
         ctx.fillStyle = "black";
         ctx.font = "30px Arial";
-        ctx.fillText("You died", 220, 220);
+        ctx.fillText("You died. Your score was ".concat(score, "."), 170, 220);
         return 1;
     }
 
@@ -31,7 +36,12 @@ function game() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.strokeRect(0, 0, canvas.width, canvas.height);
 
+    ctx.fillStyle = "black";
+    ctx.font = "30px Arial";
+    ctx.fillText(score, 10, 40);
+
     if (new_food) {
+        score = score + 1;
         food_x = 20*Math.floor(Math.random()*32);
         food_y = 20*Math.floor(Math.random()*23);
         new_food = false;
@@ -87,6 +97,7 @@ function game() {
         if (new_head.x == part.x){
             if (new_head.y == part.y){
                 died = true;
+                just_died = true;
             }
         }
     }

@@ -1,9 +1,15 @@
 {% extends 'base.html' %}
 
 {% block head %}
-{% endblock %}
 <meta charset="utf-8">
+{% endblock %}
+
 {% block body %}
 <canvas id="canvas" width="640" height="460"></canvas>
 <script src="{{ url_for('static', filename='js/game.js') }}"></script>
+
+<form id="submit_form" action="" method="POST" novalidate>
+    <p>{{ form.save_score() }} {{ form.save_score.label }}</p>
+    <p>{{ form.submit() }}</p>
+</form>
 {% endblock %}
