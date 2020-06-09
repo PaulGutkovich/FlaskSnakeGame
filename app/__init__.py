@@ -22,6 +22,10 @@ from app import models
 def index():
     return render_template('index.html')
 
+@app.route('/test')
+def test():
+    print("recieved ajax request")
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))

@@ -2,6 +2,8 @@ from flask import Blueprint, render_template, flash, redirect, url_for, request
 from app.game.forms import SaveScoreForm
 from flask_login import login_required
 from app.models import db, User
+import json
+import time
 
 game = Blueprint('game', __name__)
 
@@ -10,4 +12,4 @@ game = Blueprint('game', __name__)
 @login_required
 def index():
     form = SaveScoreForm()
-    return render_template('game/index.html', form=form)
+    return render_template('game_html/index.html', form=form)

@@ -1,5 +1,3 @@
-console.log("this is a test bitches");
-
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 document.addEventListener("keydown", keyPressed);

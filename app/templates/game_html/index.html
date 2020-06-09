@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<meta charset="utf-8">
+{% endblock %}
+
+{% block body %}
+<canvas id="canvas" width="640" height="460"></canvas>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+{% endblock %}
