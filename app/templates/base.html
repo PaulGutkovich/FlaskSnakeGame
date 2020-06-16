@@ -8,18 +8,18 @@
         <meta charset='UTF-8'>
         <link rel='stylesheet' href="{{ url_for('static', filename='css/style.css') }}">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        {% block head %}
-        {% endblock %}
+{% block head %}
+{% endblock %}
     </head>
     <body>
         <div>
-                <a href="{{ url_for('index') }}">Home</a>
-                <a href="{{ url_for('game.index') }}">Game</a>
-                {% if current_user.is_anonymous %}
-                <a href="{{ url_for('auth.login') }}">Login</a>
-                {% else %}
-                <a href="{{ url_for('auth.logout') }}">Logout</a>
-                {% endif %}
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('game.index') }}">Game</a>
+            {% if current_user.is_anonymous %}
+            <a href="{{ url_for('auth.login') }}">Login</a>
+            {% else %}
+            <a href="{{ url_for('auth.logout') }}">Logout</a>
+            {% endif %}
         </div>
         <hr>
         {% with messages = get_flashed_messages() %}
@@ -31,7 +31,7 @@
         </ul>
         {% endif %}
         {% endwith %}
-        {% block body %}
-        {% endblock %}
+{% block body %}
+{% endblock %}
     </body>
 </html>
