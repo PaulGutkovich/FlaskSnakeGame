@@ -15,5 +15,5 @@ def index():
 
 @game.route('/game_page', methods=["GET", "POST"])
 @login_required
-def index():
+def game_page():
     return render_template('game_html/game_page.html')

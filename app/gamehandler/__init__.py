@@ -6,29 +6,40 @@ class Handler():
         # initialize socketio class
         self.socketio = SocketIO()
 
-        # add socketio event handlers
-        self.socketio.on_event("connect", self.connected, namespace="/lobby")
+        # add lobby socketio event handlers
+        self.socketio.on_event("connect", self.lobby_connected, namespace="/lobby")
         self.socketio.on_event("add_room", self.add_room, namespace="/lobby")
         self.socketio.on_event("join", self.on_join, namespace="/lobby")
 
-        # initialize rooms array
-        self.rooms = []
+        # add game socketio event handlers
+        self.socketio.on_event("connect", self.game_connected, namespace="/game")
+
+        # initialize rooms array and dict
+        self.room_names = []
+        self.rooms = {}
 
         # initialize players dict
+        self.players = {}
 
-    def connected(self):
-        print(str(current_user)+" connected to lobby socket")
+    def lobby_connected(self):
+        print(current_user.username+" entered the lobby")
+        self.players[current_user.username] = None
         self.socketio.emit("update_rooms", {"new_rooms": self.rooms}, broadcast=True, namespace="/lobby")
+
+    def game_connected(self):
+        username = current_user.username
+        print(username)
+
 
     def add_room(self, data):
         room_name = data["text"]
-        if room_name not in self.rooms and room_name != "":
-            self.rooms.append(room_name)
+        if room_name not in self.room_names and room_name != "":
+            self.room_names.append(room_name)
 
-            self.socketio.emit("update_rooms", {"new_rooms": self.rooms}, broadcast=True, namespace="/lobby")
+            self.socketio.emit("update_rooms", {"new_rooms": self.room_names}, broadcast=True, namespace="/lobby")
 
     def on_join(self, data):
+        username = current_user.username
         room = data["room"]
-        if room in self.rooms:
-            join_room(room)
-            send("You joined the room "+room)
+        if room in self.room_names:
+            self.players[username] = room
