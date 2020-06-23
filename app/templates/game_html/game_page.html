@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<meta charset="utf-8">
+{% endblock %}
+
+{% block body %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+<script src="{{ url_for('static', filename='js/game_script.js') }}"></script>
+
+<form action="" method="POST">
+    <input type="text" id="text">
+    <button type="submit">Submit</button>
+</form>
+
+<div id="room_list">
+</div>
+{% endblock %}

@@ -11,5 +11,9 @@ game = Blueprint('game', __name__)
 @game.route('/', methods=["GET", "POST"])
 @login_required
 def index():
-    form = SaveScoreForm()
-    return render_template('game_html/index.html', form=form)
+    return render_template('game_html/lobby.html')
+
+@game.route('/game_page', methods=["GET", "POST"])
+@login_required
+def index():
+    return render_template('game_html/game_page.html')

@@ -18,6 +18,7 @@ function join_room(room) {
         socket.emit("join", {"room": room});
         button_clicked = true;
     }
+    window.location.url = "/game_page";
 };
 
 socket.on("update_rooms", function(data) {

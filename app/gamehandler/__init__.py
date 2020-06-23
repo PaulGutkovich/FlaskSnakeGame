@@ -17,7 +17,8 @@ class Handler():
         # initialize players dict
 
     def connected(self):
-        print(str(current_user)+" connected to socket")
+        print(str(current_user)+" connected to lobby socket")
+        self.socketio.emit("update_rooms", {"new_rooms": self.rooms}, broadcast=True, namespace="/lobby")
 
     def add_room(self, data):
         room_name = data["text"]
