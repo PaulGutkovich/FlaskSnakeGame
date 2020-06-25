@@ -1,15 +1,14 @@
 from flask_socketio import SocketIO, join_room, leave_room, emit, send
 from flask_login import current_user
-import _thread as t
 
 class Handler():
     def __init__(self):
         # initialize socketio class
-        self.socketio = SocketIO(ping_interval=10)
+        self.socketio = SocketIO(ping_interval=10, logger=False)
 
         # add lobby socketio event handlers
         self.socketio.on_event("connect", self.lobby_connected, namespace="/lobby")
-        self.socketio.on_event("disconnected", self.lobby_disconnected, namespace="/lobby")
+        self.socketio.on_event("disconnect", self.lobby_disconnected, namespace="/lobby")
         self.socketio.on_event("add_room", self.add_room, namespace="/lobby")
         self.socketio.on_event("join", self.on_join, namespace="/lobby")
 
@@ -25,9 +24,9 @@ class Handler():
         self.players = {}
 
     def lobby_connected(self):
-        print(current_user.username+" entered the lobby")
-        self.players[current_user.username] = None
-        self.socketio.emit("update_rooms", {"new_rooms": self.room_names}, broadcast=True, namespace="/lobby")
+        username = current_user.username
+        self.socketio.emit("update_rooms", {"new_rooms": self.room_names}, namespace="/lobby")
+        print(username + " entered the lobby")
 
     def game_connected(self):
         username = current_user.username
@@ -37,13 +36,21 @@ class Handler():
 
         room = self.players[username]
         join_room(room)
-
-        print(self.players)
-        print(username+" entered game room "+room)
+        print(username + " entered game room " + room)
+        emit("")
 
 
     def lobby_disconnected(self):
-        print(current_user.username+" exited the lobby")
+        username = current_user.username
+        print(username + " exited the lobby", flush=True)
+
+    def game_disconnected(self):
+        username = current_user.username
+        room = self.players[username]
+        self.players.pop(username)
+        self.rooms[room].pop(username)
+        if len(self.rooms[room]) == 0:
+            self.room_names.pop(room)
 
     def add_room(self, data):
         room_name = data["text"]
@@ -53,7 +60,7 @@ class Handler():
             self.socketio.emit("update_rooms", {"new_rooms": self.room_names}, broadcast=True, namespace="/lobby")
 
     def on_join(self, data):
-        print(data)
+        print(data, flush=True)
         username = current_user.username
         room = data["room"]
         if room in self.room_names:

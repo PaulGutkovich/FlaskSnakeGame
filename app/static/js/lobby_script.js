@@ -21,7 +21,7 @@ function join_room(room) {
         button_clicked = false;
     }
     else {
-        socket.emit("join", {"room": room});
+        socket.emit("join", {"room": room.text});
         button_clicked = true;
     }
     window.location.href = "/game/game_page";
