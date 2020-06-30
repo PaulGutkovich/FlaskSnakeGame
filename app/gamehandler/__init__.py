@@ -1,5 +1,8 @@
 from flask_socketio import SocketIO, join_room, leave_room, emit, send
 from flask_login import current_user
+from app.snake import *
+
+g = Game()
 
 class Handler():
     def __init__(self):
