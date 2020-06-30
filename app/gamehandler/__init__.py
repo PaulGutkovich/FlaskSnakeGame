@@ -14,7 +14,8 @@ class Handler():
 
         # add game socketio event handlers
         self.socketio.on_event("connect", self.game_connected, namespace="/game")
-        #self.socketio.on_event("disconnect", self.game_disconnected, namespace="/game")
+        self.socketio.on_event("disconnect", self.game_disconnected, namespace="/game")
+        self.socketio.on_event("entrance_check_response", self.check_player, namespace="/game")
 
         # initialize rooms array and dict
         self.room_names = []
@@ -26,18 +27,21 @@ class Handler():
     def lobby_connected(self):
         username = current_user.username
         self.socketio.emit("update_rooms", {"new_rooms": self.room_names}, namespace="/lobby")
-        print(username + " entered the lobby")
+        print(username + " entered the lobby", flush=True)
 
     def game_connected(self):
         username = current_user.username
         if username not in self.players:
-            emit("lobby")
+            emit("kick")
             return 0
 
         room = self.players[username]
         join_room(room)
-        print(username + " entered game room " + room)
-        emit("")
+        if room not in self.rooms:
+            self.rooms[room] = {}
+
+        self.rooms[room][username] = "test"
+        print(username + " entered game room " + room, flush=True)
 
 
     def lobby_disconnected(self):
@@ -46,22 +50,41 @@ class Handler():
 
     def game_disconnected(self):
         username = current_user.username
-        room = self.players[username]
-        self.players.pop(username)
-        self.rooms[room].pop(username)
-        if len(self.rooms[room]) == 0:
-            self.room_names.pop(room)
+        if username in self.players:
+            room = self.players[username]
+            self.players.pop(username)
+            self.rooms[room].pop(username)
+            self.socketio.emit("entrance_check", room=room, namespace="/game")
+            if len(self.rooms[room]) == 0:
+                self.room_names.remove(room)
+                self.socketio.emit("update_rooms", {"new_rooms": self.room_names}, namespace="/lobby")
+
+            print(username + " exited game room " + room, flush=True)
 
     def add_room(self, data):
         room_name = data["text"]
+        username = current_user.username
         if room_name not in self.room_names and room_name != "":
-            self.room_names.append(room_name)
+            if username not in self.players:
+                self.room_names.append(room_name)
 
-            self.socketio.emit("update_rooms", {"new_rooms": self.room_names}, broadcast=True, namespace="/lobby")
+                self.socketio.emit("update_rooms", {"new_rooms": self.room_names}, broadcast=True, namespace="/lobby")
 
     def on_join(self, data):
-        print(data, flush=True)
         username = current_user.username
         room = data["room"]
         if room in self.room_names:
-            self.players[username] = room
+            if username not in self.players:
+                self.players[username] = room
+                emit("game")
+            else:
+                current_room = self.players[username]
+                if current_room == room:
+                    emit("game")
+                else:
+                    send("You can not join this room because you are already in room "+current_room)
+
+    def check_player(self):
+        username = current_user.username
+        if username not in self.players:
+            emit("kick")

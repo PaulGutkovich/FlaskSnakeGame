@@ -3,29 +3,31 @@ $(document).ready(function() {
         e.preventDefault();
         var data = {"text": $("#text").val()};
         socket.emit("add_room", data);
-        join_room(data);
-    });
-});
-
-$(document).ready(function() {
-    $(window).bind("beforeunload", function() { 
-        socket.emit("disconnected"); 
+        join_room(data.text);
+        button_clicked = false;
     });
 });
 
 var socket = io.connect("/lobby");
 var button_clicked = false;
 
-function join_room(room) {
+function redirect() {
+    window.location.href = "/game/game_page";
+}
+
+function join_room(r) {
     if (button_clicked) {
         button_clicked = false;
     }
     else {
-        socket.emit("join", {"room": room.text});
+        socket.emit("join", {"room": r});
         button_clicked = true;
     }
-    window.location.href = "/game/game_page";
 };
+
+socket.on("game", function() {
+    redirect();
+})
 
 socket.on("update_rooms", function(data) {
     var new_rooms = data.new_rooms;
@@ -45,9 +47,13 @@ socket.on("update_rooms", function(data) {
     for (var room of new_rooms) {
         target_id = "#button_".concat(room);
         target_button = $(target_id);
-        target_button.off().on("click", function() {
-            join_room(room);
-        });
+        target_button.off().on("click", (function(r) {
+            function f() {
+                join_room(r);
+            }
+            return f;
+        })(room)
+        );
     }
 });
 
