@@ -1,13 +1,15 @@
 from flask_socketio import SocketIO, join_room, leave_room, emit, send
 from flask_login import current_user
 from app.snake import *
+from threading import Thread
+import time
 
 g = Game()
 
 class Handler():
     def __init__(self):
         # initialize socketio class
-        self.socketio = SocketIO(ping_interval=10, logger=False)
+        self.socketio = SocketIO()
 
         # add lobby socketio event handlers
         self.socketio.on_event("connect", self.lobby_connected, namespace="/lobby")
@@ -19,6 +21,7 @@ class Handler():
         self.socketio.on_event("connect", self.game_connected, namespace="/game")
         self.socketio.on_event("disconnect", self.game_disconnected, namespace="/game")
         self.socketio.on_event("entrance_check_response", self.check_player, namespace="/game")
+        self.socketio.on_event("dir_change", self.change_dir, namespace="/game")
 
         # initialize rooms array and dict
         self.room_names = []
@@ -26,6 +29,9 @@ class Handler():
 
         # initialize players dict
         self.players = {}
+
+        t1 = Thread(target=self.thread)
+        t1.start()
 
     def lobby_connected(self):
         username = current_user.username
@@ -41,9 +47,13 @@ class Handler():
         room = self.players[username]
         join_room(room)
         if room not in self.rooms:
-            self.rooms[room] = {}
+            self.rooms[room] = Game()
 
-        self.rooms[room][username] = "test"
+        game = self.rooms[room]
+
+        if username not in game.snakes:
+            self.rooms[room].new_snake(username)
+
         print(username + " entered game room " + room, flush=True)
 
 
@@ -56,9 +66,9 @@ class Handler():
         if username in self.players:
             room = self.players[username]
             self.players.pop(username)
-            self.rooms[room].pop(username)
+            self.rooms[room].snakes.pop(username)
             self.socketio.emit("entrance_check", room=room, namespace="/game")
-            if len(self.rooms[room]) == 0:
+            if len(self.rooms[room].snakes) == 0:
                 self.room_names.remove(room)
                 self.socketio.emit("update_rooms", {"new_rooms": self.room_names}, namespace="/lobby")
 
@@ -91,3 +101,31 @@ class Handler():
         username = current_user.username
         if username not in self.players:
             emit("kick")
+
+    def change_dir(self, data):
+        username = current_user.username
+        room = self.players[username]
+
+        self.rooms[room].snakes[username].dir = data["dir"]
+
+    def update(self):
+        for room in self.room_names:
+            self.rooms[room].update()
+            print("test", flush=True)
+            game = self.rooms[room]
+            print("test0", flush=True)
+
+            data = []
+            for username in game.snakes:
+                print("test1", flush=True)
+                snake = game.snakes[username]
+                print("test2", flush=True)
+                data.append(snake.blocks.tolist())
+
+            print("sending block")
+            self.socketio.emit("snakes", {"blocks": data}, namespace="/game")
+
+    def thread(self):
+        while True:
+            self.update()
+            time.sleep(1.)
