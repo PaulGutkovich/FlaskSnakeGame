@@ -39,6 +39,7 @@ socket.on("kick", function() {
 })
 
 socket.on("snakes", function(data){
-    console.log(data.blocks);
+    console.log("recieved snake blocks!!!!!!!!!!");
+    //console.log(data.blocks);
     //draw(data);
 })

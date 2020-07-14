@@ -51,8 +51,6 @@ class Game:
             #ate = self.check_ate(snake)
             ate = False
 
-            print("testx", flush=True)
-
             if ate:
                 snake.update(True)
                 head = snake.head
@@ -60,9 +58,7 @@ class Game:
                 self.board[head[0]][head[1]] = 1
 
             else:
-                print("testa", flush=True)
                 snake.update(False)
-                print("testb", flush=True)
                 head = snake.head
                 self.board[head[0]][head[1]] = 1
                 self.board[tail[0]][tail[1]] = 0
@@ -81,7 +77,6 @@ class Snake:
         if not ate:
             self.blocks = self.blocks[:-1]
 
-        print(new_head.shape, self.blocks.shape, flush=True)
         self.blocks = np.concatenate((new_head.reshape(1, 2), self.blocks), axis=0)
         self.head = new_head
 

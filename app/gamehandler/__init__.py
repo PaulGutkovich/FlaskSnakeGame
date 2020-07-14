@@ -9,7 +9,7 @@ g = Game()
 class Handler():
     def __init__(self):
         # initialize socketio class
-        self.socketio = SocketIO()
+        self.socketio = SocketIO(async_mode = "eventlet")
 
         # add lobby socketio event handlers
         self.socketio.on_event("connect", self.lobby_connected, namespace="/lobby")
@@ -109,21 +109,18 @@ class Handler():
         self.rooms[room].snakes[username].dir = data["dir"]
 
     def update(self):
-        for room in self.room_names:
+        for room in self.rooms:
             self.rooms[room].update()
-            print("test", flush=True)
             game = self.rooms[room]
-            print("test0", flush=True)
 
             data = []
             for username in game.snakes:
-                print("test1", flush=True)
                 snake = game.snakes[username]
-                print("test2", flush=True)
                 data.append(snake.blocks.tolist())
 
-            print("sending block")
+            print("sending block", flush=True)
             self.socketio.emit("snakes", {"blocks": data}, namespace="/game")
+            print("blocks sent", flush=True)
 
     def thread(self):
         while True:
