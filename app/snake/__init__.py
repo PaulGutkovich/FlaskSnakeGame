@@ -8,8 +8,7 @@ def random_block():
     x = random.randint(0, cols-1)
     y = random.randint(0, rows-1)
 
-    #return np.array([x, y])
-    return np.array([15, 15])
+    return np.array([x, y])
 
 def random_dir():
     dir = np.array([0, 0])

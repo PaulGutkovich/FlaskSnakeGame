@@ -118,11 +118,9 @@ class Handler():
                 snake = game.snakes[username]
                 data.append(snake.blocks.tolist())
 
-            print("sending block", flush=True)
             self.socketio.emit("snakes", {"blocks": data}, namespace="/game")
-            print("blocks sent", flush=True)
 
     def thread(self):
         while True:
             self.update()
-            time.sleep(1.)
+            time.sleep(0.1)
