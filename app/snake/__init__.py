@@ -47,8 +47,7 @@ class Game:
         for username in self.snakes:
             snake = self.snakes[username]
             tail = snake.blocks[-1]
-            #ate = self.check_ate(snake)
-            ate = False
+            ate = self.check_ate(snake)
 
             if ate:
                 snake.update(True)
@@ -62,6 +61,42 @@ class Game:
                 self.board[head[0]][head[1]] = 1
                 self.board[tail[0]][tail[1]] = 0
 
+    def auto_collision(self):
+        for username in self.snakes:
+            snake = self.snakes[username]
+            head = snake.head
+            l = snake.blocks.shape[0]:
+            if l < 3:
+                return False
+
+            else:
+                i = 1
+                while True:
+                    if i == l:
+                        return False
+
+                    block = snake.blocks[i]
+                    if block[0] == head[0]:
+                        if block[1] == head[1]:
+                            return True
+
+    def collision(self):
+        dead = []
+        for u1 in self.snakes:
+            for u2 in self.snakes:
+                if u1 == u2:
+                    continue
+
+                snake1 = self.snakes[u1]
+                snake2 = self.snakes[u2]
+
+                head = snake1.head
+
+                for block in snake2.blocks:
+                    if block[0] == head[0]:
+                        if block[1] == head[1]:
+                            if u1 not in dead:
+                                dead.append(u1)
 
 
 class Snake:
