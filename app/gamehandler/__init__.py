@@ -66,7 +66,14 @@ class Handler():
         if username in self.players:
             room = self.players[username]
             self.players.pop(username)
-            self.rooms[room].snakes.pop(username)
+            try:
+                self.rooms[room].snakes.pop(username)
+            except:
+                try:
+                    self.rooms[room].dead.pop(username)
+                except:
+                    pass
+            
             self.socketio.emit("entrance_check", room=room, namespace="/game")
             if len(self.rooms[room].snakes) == 0:
                 self.room_names.remove(room)
@@ -120,8 +127,7 @@ class Handler():
                 snake = game.snakes[username]
                 data.append(snake.blocks.tolist())
 
-            self.socketio.emit("food", {"food":food}, namespace="/game")
-            self.socketio.emit("snakes", {"blocks": data}, namespace="/game")
+            self.socketio.emit("update", {"blocks": data, "food": food}, namespace="/game")
 
     def thread(self):
         while True:

@@ -46,6 +46,12 @@ socket.on("food", function(data){
     draw_food(data.food);
 })
 
+socket.on("update", function(data) {
+    background();
+    draw_food(data.food);
+    draw(data.blocks);
+})
+
 function draw(data) {
     ctx.fillStyle = "#000000";
     ctx.strokeStyle = "#FF0000";
@@ -72,7 +78,6 @@ function draw_block(block) {
 }
 
 function draw_food(food) {
-    background();
     x = food[0];
     y = food[1];
     ctx.fillStyle = "#0000FF"

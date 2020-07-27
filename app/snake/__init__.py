@@ -20,6 +20,7 @@ def random_dir():
 class Game:
     def __init__(self):
         self.snakes = {}
+        self.dead = []
         self.board = np.zeros((cols, rows))
         self.food = self.empty_block()
     
@@ -28,6 +29,13 @@ class Game:
             block = random_block()
             if self.board[block[0]][block[1]] == 0:
                 return block
+
+    def fill_board(self):
+        self.board = np.zeros((cols, rows))
+        for username in self.snakes:
+            snake = self.snakes[username]
+            for block in snake.blocks:
+                self.board[block[0]][block[1]] = 1
 
     def new_snake(self, username):
         head = self.empty_block()
@@ -42,6 +50,48 @@ class Game:
         if snake.head[0] == self.food[0]:
             if snake.head[1] == self.food[1]:
                 return True
+
+    def auto_collide(self, snake):
+        head = snake.head
+        l = snake.blocks.shape[0]
+        if l < 3:
+            return False
+
+        else:
+            i = 1
+            while True:
+                if i == l:
+                    return False
+
+                block = snake.blocks[i]
+                if block[0] == head[0]:
+                    if block[1] == head[1]:
+                        return True
+
+                i += 1
+
+    def check_dead(self, snake):
+        if self.auto_collide(snake):
+            return True
+        if self.collide(snake):
+            return True
+        if snake.check_border():
+            return True
+
+        return False
+
+    def collide(self, snake):
+        head = snake.head
+        for user2 in self.snakes:
+            snake2 = self.snakes[user2]
+            if snake == snake2:
+                continue
+
+            for block in snake2.blocks:
+                if block[0] == head[0]:
+                    if block[1] == head[1]:
+                        return True
+        return False
     
     def update(self):
         for username in self.snakes:
@@ -53,50 +103,29 @@ class Game:
                 snake.update(True)
                 head = snake.head
                 self.food = self.empty_block()
-                self.board[head[0]][head[1]] = 1
+                try:
+                    self.board[head[0]][head[1]] = 1
+                except:
+                    pass
 
             else:
                 snake.update(False)
                 head = snake.head
-                self.board[head[0]][head[1]] = 1
-                self.board[tail[0]][tail[1]] = 0
+                try:
+                    self.board[head[0]][head[1]] = 1
+                    self.board[tail[0]][tail[1]] = 0
+                except:
+                    pass
 
-    def auto_collision(self):
+        dead = []
         for username in self.snakes:
             snake = self.snakes[username]
-            head = snake.head
-            l = snake.blocks.shape[0]:
-            if l < 3:
-                return False
+            if self.check_dead(snake):
+                dead.append(username)
 
-            else:
-                i = 1
-                while True:
-                    if i == l:
-                        return False
-
-                    block = snake.blocks[i]
-                    if block[0] == head[0]:
-                        if block[1] == head[1]:
-                            return True
-
-    def collision(self):
-        dead = []
-        for u1 in self.snakes:
-            for u2 in self.snakes:
-                if u1 == u2:
-                    continue
-
-                snake1 = self.snakes[u1]
-                snake2 = self.snakes[u2]
-
-                head = snake1.head
-
-                for block in snake2.blocks:
-                    if block[0] == head[0]:
-                        if block[1] == head[1]:
-                            if u1 not in dead:
-                                dead.append(u1)
+        for username in dead:
+            self.snakes.pop(username)
+            self.dead.append(username)
 
 
 class Snake:
