@@ -1,6 +1,11 @@
 var canvas = document.getElementById("c");
 var ctx = canvas.getContext("2d");
 
+$(document).ready( function() {
+    var form = document.getElementById("dead_form");
+    form.style.display = "none";
+});
+
 var WIDTH = 40;
 var HEIGHT = 30;
 var SIZE = 20;

@@ -10,4 +10,13 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
 <script src="{{ url_for('static', filename='js/game_script.js') }}"></script>
+
+<div id="dead_form">
+    <p>You Died</p>
+    <form>
+        <button type="submit" id="lobby_button" onclick="lobby()">Return To Lobby</button>
+        <button type="submit" id="respawn_button" onclick="resume()">Respawn</button>
+    </form>
+
+</div>
 {% endblock %}
