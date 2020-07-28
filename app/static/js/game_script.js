@@ -1,6 +1,10 @@
 var canvas = document.getElementById("c");
 var ctx = canvas.getContext("2d");
 
+var WIDTH = 40;
+var HEIGHT = 30;
+var SIZE = 20;
+
 document.onkeydown = checkKey;
 
 function checkKey(e) {
@@ -64,17 +68,17 @@ function draw(data) {
 
 function background() {
     ctx.fillStyle = "#FFFFFF";
-    ctx.fillRect(0, 0, 640, 460);
+    ctx.fillRect(0, 0, WIDTH*SIZE, HEIGHT*SIZE);
     ctx.strokeStyle = "#000000";
-    ctx.strokeRect(0, 0, 640, 460);
+    ctx.strokeRect(0, 0, WIDTH*SIZE, HEIGHT*SIZE);
 }
 
 
 function draw_block(block) {
     x = block[0];
     y = block[1];
-    ctx.fillRect(20*x, 440-20*y, 20, 20);
-    ctx.strokeRect(20*x, 440-20*y, 20, 20);
+    ctx.fillRect(SIZE*x, (HEIGHT-1-y)*SIZE, SIZE, SIZE);
+    ctx.strokeRect(SIZE*x, (HEIGHT-1-y)*SIZE, SIZE, SIZE);
 }
 
 function draw_food(food) {
@@ -82,6 +86,6 @@ function draw_food(food) {
     y = food[1];
     ctx.fillStyle = "#0000FF"
     ctx.strokeStyle = "#000000"
-    ctx.fillRect(20*x, 440-20*y, 20, 20)
-    ctx.strokeRect(20*x, 440-20*y, 20, 20)
+    ctx.fillRect(SIZE*x, (HEIGHT-1-y)*SIZE, SIZE, SIZE)
+    ctx.strokeRect(SIZE*x, (HEIGHT-1-y)*SIZE, SIZE, SIZE)
 }

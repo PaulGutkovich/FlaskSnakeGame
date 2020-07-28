@@ -1,8 +1,8 @@
 import numpy as np
 import random
 
-rows = 23
-cols = 32
+rows = 30
+cols = 40
 
 def random_block():
     x = random.randint(0, cols-1)
@@ -133,7 +133,6 @@ class Snake:
         self.head = np.array([x, y])
         self.blocks = np.array([[x, y]])
         self.dir = random_dir()
-        self.alive = True
 
     def update(self, ate):
         new_head = self.head + self.dir
@@ -145,9 +144,11 @@ class Snake:
 
     def check_border(self):
         if self.head[0] < 0 or self.head[0] >= cols:
-            self.alive = False
+            return True
 
         if self.head[1] < 0 or self.head[1] >= rows:
-            self.alive = False
+            return True
+
+        return False
 
     

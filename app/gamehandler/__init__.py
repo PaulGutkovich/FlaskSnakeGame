@@ -70,12 +70,12 @@ class Handler():
                 self.rooms[room].snakes.pop(username)
             except:
                 try:
-                    self.rooms[room].dead.pop(username)
+                    self.rooms[room].dead.remove(username)
                 except:
                     pass
             
             self.socketio.emit("entrance_check", room=room, namespace="/game")
-            if len(self.rooms[room].snakes) == 0:
+            if len(self.rooms[room].snakes) == 0 and len(self.rooms[room].dead) == 0:
                 self.room_names.remove(room)
                 self.socketio.emit("update_rooms", {"new_rooms": self.room_names}, namespace="/lobby")
 
@@ -113,7 +113,11 @@ class Handler():
         username = current_user.username
         room = self.players[username]
 
-        self.rooms[room].snakes[username].dir = data["dir"]
+        try:
+            self.rooms[room].snakes[username].dir = data["dir"]
+
+        except:
+            pass
 
     def update(self):
         for room in self.rooms:
@@ -127,7 +131,7 @@ class Handler():
                 snake = game.snakes[username]
                 data.append(snake.blocks.tolist())
 
-            self.socketio.emit("update", {"blocks": data, "food": food}, namespace="/game")
+            self.socketio.emit("update", {"blocks": data, "food": food}, namespace="/game", room=room)
 
     def thread(self):
         while True:

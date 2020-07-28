@@ -2,10 +2,11 @@
 
 {% block head %}
 <meta charset="utf-8">
+<link rel='stylesheet' href="{{ url_for('static', filename='css/game_page.css') }}">
 {% endblock %}
 
 {% block body %}
-<canvas id="c" width="640" height="460"></canvas>
+<canvas id="c" width="800" height="600"></canvas>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
 <script src="{{ url_for('static', filename='js/game_script.js') }}"></script>
