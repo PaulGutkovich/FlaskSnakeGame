@@ -22,6 +22,8 @@ class Handler():
         self.socketio.on_event("disconnect", self.game_disconnected, namespace="/game")
         self.socketio.on_event("entrance_check_response", self.check_player, namespace="/game")
         self.socketio.on_event("dir_change", self.change_dir, namespace="/game")
+        self.socketio.on_event("dead_check", self.dead_response, namespace="/game")
+        self.socketio.on_event("respawn", self.respawn_player, namespace="/game")
 
         # initialize rooms array and dict
         self.room_names = []
@@ -76,6 +78,7 @@ class Handler():
             
             self.socketio.emit("entrance_check", room=room, namespace="/game")
             if len(self.rooms[room].snakes) == 0 and len(self.rooms[room].dead) == 0:
+                #print(self.rooms[room].snakes, self.rooms[room].dead)
                 self.room_names.remove(room)
                 self.socketio.emit("update_rooms", {"new_rooms": self.room_names}, namespace="/lobby")
 
@@ -119,6 +122,26 @@ class Handler():
         except:
             pass
 
+    def dead_response(self):
+        username = current_user.username
+        room_name = self.players[username]
+        room = self.rooms[room_name]
+        if username in room.dead:
+            emit("dead_status", {"dead": True})
+        else:
+            emit("dead_status", {"dead": False})
+
+    def respawn_player(self):
+        username = current_user.username
+        room_name = self.players[username]
+        room = self.rooms[room_name]
+
+        room.new_snake(username)
+        room.dead.remove(username)
+
+        emit("hide_form")
+
+
     def update(self):
         for room in self.rooms:
             self.rooms[room].update()
@@ -132,6 +155,7 @@ class Handler():
                 data.append(snake.blocks.tolist())
 
             self.socketio.emit("update", {"blocks": data, "food": food}, namespace="/game", room=room)
+                
 
     def thread(self):
         while True:

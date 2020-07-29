@@ -1,10 +1,12 @@
 var canvas = document.getElementById("c");
 var ctx = canvas.getContext("2d");
 
-$(document).ready( function() {
-    var form = document.getElementById("dead_form");
-    form.style.display = "none";
-});
+var form = document.getElementById("dead_form");
+form.style.display = "none";
+
+form.onsubmit = function(e) {
+    e.preventDefault();
+};
 
 var WIDTH = 40;
 var HEIGHT = 30;
@@ -59,6 +61,23 @@ socket.on("update", function(data) {
     background();
     draw_food(data.food);
     draw(data.blocks);
+    socket.emit("dead_check");
+})
+
+socket.on("dead_status", function(data) {
+    if (data.dead) {
+        if (form.style.display == "none") {
+            form.style.display = "block";
+        }
+    }
+})
+
+function respawn() {
+    socket.emit("respawn");
+}
+
+socket.on("hide_form", function() {
+    form.style.display = "none";
 })
 
 function draw(data) {

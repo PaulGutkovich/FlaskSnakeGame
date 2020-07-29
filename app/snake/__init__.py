@@ -43,8 +43,6 @@ class Game:
         self.snakes[username] = snake
         self.board[head[0]][head[1]] = 1
 
-    def remove_snake(self, username):
-        self.snakes.pop(username)
 
     def check_ate(self, snake):
         if snake.head[0] == self.food[0]:

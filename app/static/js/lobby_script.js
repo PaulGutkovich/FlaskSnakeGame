@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    $("form").submit(function (e) {
+    $("form").submit(function(e) {
         e.preventDefault();
         var data = {"text": $("#text").val()};
         socket.emit("add_room", data);
