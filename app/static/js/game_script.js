@@ -1,5 +1,6 @@
 var canvas = document.getElementById("c");
 var ctx = canvas.getContext("2d");
+ctx.font = "30px Arial";
 
 var form = document.getElementById("dead_form");
 form.style.display = "none";
@@ -61,6 +62,7 @@ socket.on("update", function(data) {
     background();
     draw_food(data.food);
     draw(data.blocks, data.colors);
+    draw_scores(data.blocks, data.colors, data.players);
     socket.emit("dead_check");
 })
 
@@ -104,6 +106,7 @@ function draw_block(block, color) {
     x = block[0];
     y = block[1];
     ctx.fillStyle = color;
+    ctx.strokeStyle = "000000";
     ctx.fillRect(SIZE*x, (HEIGHT-1-y)*SIZE, SIZE, SIZE);
     ctx.strokeRect(SIZE*x, (HEIGHT-1-y)*SIZE, SIZE, SIZE);
 }
@@ -115,4 +118,16 @@ function draw_food(food) {
     ctx.strokeStyle = "#000000"
     ctx.fillRect(SIZE*x, (HEIGHT-1-y)*SIZE, SIZE, SIZE)
     ctx.strokeRect(SIZE*x, (HEIGHT-1-y)*SIZE, SIZE, SIZE)
+}
+
+function draw_scores(blocks, colors, players) {
+    var height = 50;
+    for (var i=0; i<blocks.length; i++){
+        snake = blocks[i];
+        color = colors[i];
+        length = snake.length;
+        player = players[i];
+        height += 50;
+        ctx.fillText(player.concat(length), 10, height);
+    }
 }
