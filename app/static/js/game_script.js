@@ -83,7 +83,7 @@ socket.on("hide_form", function() {
 function draw(blocks, colors) {
     ctx.fillStyle = "#000000";
     ctx.strokeStyle = "#FF0000";
-    for (var i = 0; i++; i< blocks.length) {
+    for (var i = 0; i< blocks.length; i++) {
         var snake = blocks[i];
         var color = colors[i];
         for (var block of snake) {
@@ -104,7 +104,7 @@ function draw_block(block, color) {
     x = block[0];
     y = block[1];
     ctx.fillRect(SIZE*x, (HEIGHT-1-y)*SIZE, SIZE, SIZE);
-    //ctx.strokeStyle = color;
+    ctx.strokeStyle = color;
     ctx.strokeRect(SIZE*x, (HEIGHT-1-y)*SIZE, SIZE, SIZE);
 }
 
