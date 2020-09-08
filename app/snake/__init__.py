@@ -127,7 +127,7 @@ class Snake:
         symbols = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
         self.color = "#"
         for i in range(6):
-            j = random.randint(0, 15)
+            j = random.randint(0, 14)
             s = symbols[j]
             self.color = self.color + s
 
