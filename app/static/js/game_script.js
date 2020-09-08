@@ -104,7 +104,7 @@ function draw_block(block, color) {
     x = block[0];
     y = block[1];
     ctx.fillRect(SIZE*x, (HEIGHT-1-y)*SIZE, SIZE, SIZE);
-    ctx.strokeStyle = color;
+    //ctx.strokeStyle = color;
     ctx.strokeRect(SIZE*x, (HEIGHT-1-y)*SIZE, SIZE, SIZE);
 }
 
