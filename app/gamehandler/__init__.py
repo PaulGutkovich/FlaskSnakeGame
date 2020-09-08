@@ -4,8 +4,6 @@ from app.snake import *
 from threading import Thread
 import time
 
-g = Game()
-
 class Handler():
     def __init__(self):
         # initialize socketio class
@@ -158,6 +156,12 @@ class Handler():
                 
 
     def thread(self):
+        loop_time = time.time()
         while True:
+            loop_time += 0.1
             self.update()
-            time.sleep(0.1)
+            if loop_time >= time.time():
+                time.sleep(loop_time-time.time())
+
+            else:
+                loop_time = time.time()

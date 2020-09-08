@@ -92,6 +92,7 @@ class Game:
         return False
     
     def update(self):
+        self.fill_board()
         for username in self.snakes:
             snake = self.snakes[username]
             tail = snake.blocks[-1]
@@ -101,19 +102,9 @@ class Game:
                 snake.update(True)
                 head = snake.head
                 self.food = self.empty_block()
-                try:
-                    self.board[head[0]][head[1]] = 1
-                except:
-                    pass
 
             else:
                 snake.update(False)
-                head = snake.head
-                try:
-                    self.board[head[0]][head[1]] = 1
-                    self.board[tail[0]][tail[1]] = 0
-                except:
-                    pass
 
         dead = []
         for username in self.snakes:
@@ -125,6 +116,7 @@ class Game:
             self.snakes.pop(username)
             self.dead.append(username)
 
+        self.fill_board()
 
 class Snake:
     def __init__(self, x, y):
