@@ -105,7 +105,6 @@ function draw_block(block, color) {
     y = block[1];
     ctx.fillRect(SIZE*x, (HEIGHT-1-y)*SIZE, SIZE, SIZE);
     ctx.strokeStyle = color;
-    console.log(ctx.strokeStyle);
     ctx.strokeRect(SIZE*x, (HEIGHT-1-y)*SIZE, SIZE, SIZE);
 }
 
