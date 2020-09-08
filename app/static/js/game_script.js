@@ -60,7 +60,7 @@ socket.on("food", function(data){
 socket.on("update", function(data) {
     background();
     draw_food(data.food);
-    draw(data.blocks);
+    draw(data.blocks, data.colors);
     socket.emit("dead_check");
 })
 
@@ -80,12 +80,14 @@ socket.on("hide_form", function() {
     form.style.display = "none";
 })
 
-function draw(data) {
+function draw(blocks, colors) {
     ctx.fillStyle = "#000000";
     ctx.strokeStyle = "#FF0000";
-    for (var snake of data) {
+    for (var i = 0; i++; i< blocks.length) {
+        var snake = blocks[i];
+        var color = colors[i];
         for (var block of snake) {
-            draw_block(block);
+            draw_block(block, color);
         }
     }
 }
@@ -98,10 +100,11 @@ function background() {
 }
 
 
-function draw_block(block) {
+function draw_block(block, color) {
     x = block[0];
     y = block[1];
     ctx.fillRect(SIZE*x, (HEIGHT-1-y)*SIZE, SIZE, SIZE);
+    ctx.strokeStyle = color;
     ctx.strokeRect(SIZE*x, (HEIGHT-1-y)*SIZE, SIZE, SIZE);
 }
 

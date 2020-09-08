@@ -123,6 +123,13 @@ class Snake:
         self.head = np.array([x, y])
         self.blocks = np.array([[x, y]])
         self.dir = random_dir()
+        
+        symbols = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
+        self.color = "#"
+        for i in range(6):
+            j = random.randint(0, 15)
+            s = symbols[j]
+            self.color = self.color + s
 
     def update(self, ate):
         new_head = self.head + self.dir

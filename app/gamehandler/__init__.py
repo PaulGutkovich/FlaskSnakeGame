@@ -148,11 +148,13 @@ class Handler():
             food = game.food.tolist()
 
             data = []
+            colors = []
             for username in game.snakes:
                 snake = game.snakes[username]
                 data.append(snake.blocks.tolist())
+                colors.append(snake.color)
 
-            self.socketio.emit("update", {"blocks": data, "food": food}, namespace="/game", room=room)
+            self.socketio.emit("update", {"blocks": data, "food": food, "colors": colors}, namespace="/game", room=room)
                 
 
     def thread(self):
