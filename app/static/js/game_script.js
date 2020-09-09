@@ -1,6 +1,6 @@
 var canvas = document.getElementById("c");
 var ctx = canvas.getContext("2d");
-ctx.font = "30px Arial";
+ctx.font = "20px Arial";
 
 var form = document.getElementById("dead_form");
 form.style.display = "none";
@@ -121,13 +121,13 @@ function draw_food(food) {
 }
 
 function draw_scores(blocks, colors, players) {
-    var height = 50;
+    var height = 15;
     for (var i=0; i<blocks.length; i++){
         snake = blocks[i];
         color = colors[i];
         length = snake.length;
         player = players[i];
-        height += 50;
-        ctx.fillText(player.concat(length), 10, height);
+        ctx.fillText(player.concat(": ", length), 10, height);
+        height += 25;
     }
 }
