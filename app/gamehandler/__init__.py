@@ -3,6 +3,7 @@ from flask_login import current_user
 from app.snake import *
 from threading import Thread
 import time
+from pandas import DataFrame
 
 class Handler():
     def __init__(self):
@@ -147,16 +148,28 @@ class Handler():
 
             food = game.food.tolist()
 
-            data = []
+            blocks = []
             colors = []
             players = []
+            lengths = []
             for username in game.snakes:
                 snake = game.snakes[username]
-                data.append(snake.blocks.tolist())
+                lengths.append(snake.blocks.shape[0])
+                blocks.append(snake.blocks.tolist())
                 colors.append(snake.color)
                 players.append(username)
 
-            self.socketio.emit("update", {"blocks": data, "food": food, "colors": colors, "players": players}, namespace="/game", room=room)
+            data = DataFrame({
+                "lengths": lengths,
+                "blocks": blocks,
+                "food": food,
+                "colors": colors,
+                "players": players
+                })
+
+            data = data.sort_values(by="lengths", ascending=False).to_dict(orient="list")
+
+            self.socketio.emit("update", data, namespace="/game", room=room)
                 
 
     def thread(self):
