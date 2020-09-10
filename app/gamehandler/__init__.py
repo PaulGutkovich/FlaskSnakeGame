@@ -162,12 +162,12 @@ class Handler():
             data = DataFrame({
                 "lengths": lengths,
                 "blocks": blocks,
-                "food": food,
                 "colors": colors,
                 "players": players
                 })
 
             data = data.sort_values(by="lengths", ascending=False).to_dict(orient="list")
+            data["food"] = food
 
             self.socketio.emit("update", data, namespace="/game", room=room)
                 

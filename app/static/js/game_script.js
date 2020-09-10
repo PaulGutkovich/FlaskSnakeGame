@@ -118,7 +118,7 @@ function draw_food(food) {
 
 function draw_scores(lengths, colors, players) {
     var height = 20;
-    for (var i=0; i<blocks.length; i++){
+    for (var i=0; i<lengths.length; i++){
         color = colors[i];
         length = lengths[i];
         player = players[i];
