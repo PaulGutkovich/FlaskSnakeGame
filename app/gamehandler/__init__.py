@@ -4,6 +4,7 @@ from app.snake import *
 from threading import Thread
 import time
 from pandas import DataFrame
+import numpy as np
 
 class Handler():
     def __init__(self):
@@ -147,6 +148,10 @@ class Handler():
             game = self.rooms[room]
 
             food = game.food.tolist()
+            if len(game.dead_msg) == 0:
+                messages = {}
+            else:
+                messages = list(np.array(sorted(game.dead_msg, key=lambda x: x[1]))[:,0])
 
             blocks = []
             colors = []
@@ -168,6 +173,7 @@ class Handler():
 
             data = data.sort_values(by="lengths", ascending=False).to_dict(orient="list")
             data["food"] = food
+            data["messages"] = messages
 
             self.socketio.emit("update", data, namespace="/game", room=room)
                 

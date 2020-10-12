@@ -21,7 +21,7 @@ class Game:
     def __init__(self):
         self.snakes = {}
         self.dead = []
-        self.dead_msg = {}
+        self.dead_msg = []
         self.board = np.zeros((cols, rows))
         self.food = self.empty_block()
     
@@ -113,17 +113,31 @@ class Game:
             if self.check_dead(snake):
                 dead.append(username)
 
-        for username in self.dead_msg:
-            if self.dead_msg[username] == 0:
-                self.dead_msg.pop(username)
+        i = 0
+        while True:
+            try:
+                pair = self.dead_msg[i]
+                if pair[1] == 0:
+                    print(pair, flush=True)
+                    self.dead_msg.remove(pair)
+                    i -= 1
+                else:
+                    self.dead_msg[i][1] = self.dead_msg[i][1] - 1
+                i =+ 1
+            except:
+                break
+
                 
 
         for username in dead:
             self.snakes.pop(username)
             self.dead.append(username)
+            self.dead_msg.append([username, 50])
 
 
         self.fill_board()
+
+        print(self.dead_msg, flush=True)
 
 class Snake:
     def __init__(self, x, y):
