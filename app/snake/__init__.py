@@ -113,20 +113,12 @@ class Game:
             if self.check_dead(snake):
                 dead.append(username)
 
-        i = 0
-        while True:
-            try:
-                pair = self.dead_msg[i]
-                if pair[1] == 0:
-                    print(pair, flush=True)
-                    self.dead_msg.remove(pair)
-                    i -= 1
-                else:
-                    self.dead_msg[i][1] = self.dead_msg[i][1] - 1
-                i =+ 1
-            except:
-                break
+        temp = []
+        for pair in self.dead_msg:
+            if pair[1] > 0:
+                temp.append([pair[0], pair[1]-1])
 
+        self.dead_msg = temp
                 
 
         for username in dead:
@@ -137,7 +129,6 @@ class Game:
 
         self.fill_board()
 
-        print(self.dead_msg, flush=True)
 
 class Snake:
     def __init__(self, x, y):

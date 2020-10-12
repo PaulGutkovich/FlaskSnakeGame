@@ -149,9 +149,9 @@ class Handler():
 
             food = game.food.tolist()
             if len(game.dead_msg) == 0:
-                messages = {}
+                messages = []
             else:
-                messages = list(np.array(sorted(game.dead_msg, key=lambda x: x[1]))[:,0])
+                messages = [pair[0] for pair in game.dead_msg]
 
             blocks = []
             colors = []
